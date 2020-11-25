@@ -36,7 +36,9 @@ class FocusGame:
     def move_piece(self, player, new_location, current_location, spaces_to_move):
         """
         moves specified player's piece if move is possible
-        otherwise, returns an error.
+        otherwise, returns an error based on any of the following:
+        player turn, invalid locations (new or current location),
+        invalid number of pieces being moved
         """
 
         current_player = self.get_current_player(player)
@@ -44,7 +46,8 @@ class FocusGame:
         if player != current_player:
             return "not your turn"
 
-        self.change_player(player)
+        #cycle to next player
+        self.change_player()
 
     def get_current_player(self, player):
         """helps determine which player's turn it is"""
@@ -56,9 +59,9 @@ class FocusGame:
 
         return self._player_turn
 
-    def change_player(self, player):
+    def change_player(self):
         """updates player_turn from current player to next player"""
-        print('i am here')
+
         if self._player_turn == 'PlayerA':
             return self._player_turn == 'PlayerB'
         else:
@@ -66,4 +69,4 @@ class FocusGame:
 
 game = FocusGame(('PlayerA', 'G'), ('PlayerB', 'R'))
 game.move_piece('PlayerA', (0, 0), (0, 1), 1)  # Returns message "successfully moved"
-game.move_piece('PlayerB', (0, 0), (0, 1), 1)
+print(game.move_piece('PlayerB', (0, 0), (0, 1), 1))
