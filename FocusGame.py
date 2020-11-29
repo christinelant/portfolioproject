@@ -13,44 +13,53 @@ class FocusGame:
         """
         initializes game board with the player and the player's color
         and starting position for game pieces
+        board is set to None
         """
-        self._player_A = None
-        self._player_B = None
+        self._player_A = tuple_1
+        self._player_B = tuple_2
         self._player_turn = None
+
+        self._captured_pieces_A = []
+        self._caputured_pieces_B = []
+
+        self._reserve_pieces_A = []
+        self._reserve_pieces_B = []
+
+        # self._board = [[None for i in range(0, 5)] for i in range(0, 5)]
         self._board = [
-            ['R', 'R', 'G', 'G', 'R', 'R'],
-            ['G', 'G', 'R', 'R', 'G', 'G'],
-            ['R', 'R', 'G', 'G', 'R', 'R'],
-            ['G', 'G', 'R', 'R', 'G', 'G'],
-            ['R', 'R', 'G', 'G', 'R', 'R'],
-            ['G', 'G', 'R', 'R', 'G', 'G'],
+            [[], [], [], [], [], []],
+            [[], [], [], [], [], []],
+            [[], [], [], [], [], []],
+            [[], [], [], [], [], []],
+            [[], [], [], [], [], []],
+            [[], [], [], [], [], []],
         ]
 
-        if tuple_1[1] == 'R' or tuple_1[1] == 'r':
-            self._player_A = tuple_1
-            self._player_B = tuple_2
-        else:
-            self._player_A = tuple_2
-            self._player_B = tuple_1
+        print(self._board)
+
 
     def move_piece(self, player, new_location, current_location, spaces_to_move):
         """
         moves specified player's piece if move is possible
         otherwise, returns an error based on any of the following:
         player turn, invalid locations (new or current location),
-        invalid number of pieces being moved
+        invalid number of places being moved
         """
 
-        current_player = self.get_current_player(player)
+        current_player_turn = self.get_current_player(player)
 
-        if player != current_player:
-            return "not your turn"
+        if player != current_player_turn:
+            return False
+
+        player_piece = self.get_player_piece(player)
 
         #cycle to next player
         self.change_player()
 
     def get_current_player(self, player):
-        """helps determine which player's turn it is"""
+        """
+        returns the current turn’s player, if no current player, will set self._player_turn
+        """
 
         # first move of the game
         if self._player_turn is None:
@@ -62,11 +71,25 @@ class FocusGame:
     def change_player(self):
         """updates player_turn from current player to next player"""
 
-        if self._player_turn == 'PlayerA':
-            return self._player_turn == 'PlayerB'
-        else:
-            return self._player_turn == 'PlayerA'
+        turn = self._player_turn
 
-game = FocusGame(('PlayerA', 'G'), ('PlayerB', 'R'))
-game.move_piece('PlayerA', (0, 0), (0, 1), 1)  # Returns message "successfully moved"
-print(game.move_piece('PlayerB', (0, 0), (0, 1), 1))
+        if turn == self._player_A[0]:
+            self._player_turn = self._player_B[0]
+        else:
+            self._player_turn = self._player_A[0]
+
+    def get_player_piece(self, player):
+        """grabs the specified player's piece"""
+
+        turn = self._player_turn
+
+        if turn == self._player_A[0]:
+            return self._player_A[1]
+        else:
+            return self._player_B[1]
+
+
+
+game = FocusGame(('Unicorn', 'G'), ('PlayerB', 'R'))
+game.move_piece('Unicorn', (0, 0), (0, 1), 1)  # Returns message "successfully moved"
+game.move_piece('PlayerB', (0, 0), (0, 1), 1)
