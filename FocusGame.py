@@ -57,14 +57,15 @@ class FocusGame:
         # grab player piece at the top of stack to see if move from starting location is valid
         player_piece = self.get_player_piece(player)
 
-        # may want to change this to grab the stack and then check if player_piece is in list
-        piece_at_location = self.top_of_stack_to_string(current_location)
+        # grab the top stack piece at current location to see if it matches player piece
+        # (allows movement)
+        stack = self.top_piece(current_location)
 
-        # current_location is empty
-        if piece_at_location is False:
+        # stack is empty
+        if stack is False:
             return False
 
-        if player_piece != piece_at_location:
+        if player_piece != stack:
             return False
 
         # check new location to see if current location - new location = spaces to move
@@ -76,7 +77,13 @@ class FocusGame:
         ## END VALIDATE MOVE
 
         # make move
-        self.update_stack(new_location, current_location, player_piece)
+        self.update_stack(new_location, current_location, player_piece, spaces_to_move)
+
+        # check to see if stack is 5 or greater
+        self.check_stack(player, new_location)
+
+        # check for win
+        #self.check_for_win(player)
 
         # switch turn to other player if move is made successfully
         self.change_player()
@@ -115,7 +122,7 @@ class FocusGame:
         else:
             return self._player_B[1]
 
-    def top_of_stack_to_string(self, location):
+    def top_piece(self, location):
         """converts the piece at the top of a stack into a string"""
 
         # grabs the stack at this location
@@ -128,10 +135,10 @@ class FocusGame:
 
         top_piece = stack[length_of_stack - 1]
 
-        # convert list to a string
-        convert_to_string = ''.join(top_piece)
+        stack_to_string = ''.join(top_piece)
 
-        return convert_to_string
+        return stack_to_string
+
 
     def stack_length(self, location):
         """grabs the stack length"""
@@ -187,7 +194,7 @@ class FocusGame:
 
         return True
 
-    def show_pieces(self,location):
+    def show_pieces(self, location):
         """shows pieces stacked at specified location"""
 
         # get the row to go into and then the column via tuple
@@ -195,35 +202,59 @@ class FocusGame:
         column = location[1]
 
         # using row and column, get the piece at that location on board
-        pieces = self._board[row][column]
+        stack = self._board[row][column]
 
-        return pieces
+        return stack
 
-    def update_stack(self, new_location, old_location, player_piece):
+    def update_stack(self, new_location, old_location, player_piece, total_elements):
         """
         Updates new and old location stacks by adding or removing a
-        piece, respectively.
+        piece(s), respectively. Piece(s) to be moved are determined by the total
+        pieces within the old_stack (after being validated against stack, previously).
         """
 
         # grabs array at new location
-        new_board_location = self.show_pieces(new_location)
-
-        # updates board location array with player piece (top of stack)
-        new_board_location.append(player_piece)
+        #new_board_location = self.show_pieces(new_location)
 
         # grabs array at old location
-        old_board_location = self.show_pieces(old_location)
+        #old_board_location = self.show_pieces(old_location)
 
-        # pops off the last item on a list
-        old_board_location.pop()
+        #length_old_stack = self.stack_length(old_board_location)
+        #length_new_stack = self.stack_length(new_board_location)
 
-        print(self._board)
+        # for piece in old_board_location:
+        #     new_board_location.append(piece)
+        #
+        # # pops off the last item on a list
+        # for index_pop in range(0, length_old_stack):
+        #     old_board_location.pop()
+        #
+        # if (length_old_stack + length_new_stack) > 5:
+        #     self.check_stack(player_piece, new_board_location)
+        #
+        # #
+        # ##REMOVE LATER
+        # print(self._board)
+        # ##REMOVE LATER
+        # #
 
+    def check_stack(self, player_piece, location):
+        """
+        Grabs the stack that player had made a move to and check whether or not the stack
+        is more than 5. if piece at the bottom of the stack
+        """
+
+        stack = self.show_pieces(location)
+        stack_length = self.stack_length(location)
+
+        while stack_length > 5:
+            bottom_of_stack = stack[0]
+            print('iamhere')
 
 game = FocusGame(('Unicorn', 'R'), ('PlayerB', 'G'))
 print(game.move_piece('Unicorn', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
-print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
-print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "successfully moved"
-print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
-print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
-game.show_pieces((0,3)) #Returns ['R'])
+#print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
+#print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "successfully moved"
+#print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
+#print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
+print(game.show_pieces((0,3))) #Returns ['R'])
