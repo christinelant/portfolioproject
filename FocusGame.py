@@ -2,7 +2,6 @@
 # Date: 11/24/2020
 # Description:
 
-
 class FocusGame:
     """
     Two player game where either player's goal is to capture all of
@@ -19,11 +18,11 @@ class FocusGame:
         self._player_B = tuple_2
         self._player_turn = None
 
-        self._captured_pieces_A = []
-        self._caputured_pieces_B = []
+        self._captured_pieces_A = 0
+        self._caputured_pieces_B = 0
 
-        self._reserve_pieces_A = []
-        self._reserve_pieces_B = []
+        self._reserve_pieces_A = 0
+        self._reserve_pieces_B = 0
 
         # self._board = [[None for i in range(self._board_size)] for i in range(self._board_size)]
 
@@ -55,7 +54,7 @@ class FocusGame:
 
         ## VALIDATE MOVE
         # grab player piece at the top of stack to see if move from starting location is valid
-        player_piece = self.get_player_piece(player)
+        player_piece = self.get_player_piece()
 
         # grab the top stack piece at current location to see if it matches player piece
         # (allows movement)
@@ -78,9 +77,6 @@ class FocusGame:
 
         # make move
         self.update_stack(new_location, current_location, player_piece, spaces_to_move)
-
-        # check to see if stack is 5 or greater
-        self.check_stack(player, new_location)
 
         # check for win
         #self.check_for_win(player)
@@ -112,7 +108,7 @@ class FocusGame:
         else:
             self._player_turn = self._player_A[0]
 
-    def get_player_piece(self, player):
+    def get_player_piece(self):
         """grabs the specified player's piece"""
 
         turn = self._player_turn
@@ -214,31 +210,31 @@ class FocusGame:
         """
 
         # grabs array at new location
-        #new_board_location = self.show_pieces(new_location)
+        new_board_location = self.show_pieces(new_location)
 
         # grabs array at old location
-        #old_board_location = self.show_pieces(old_location)
+        old_board_location = self.show_pieces(old_location)
 
-        #length_old_stack = self.stack_length(old_board_location)
-        #length_new_stack = self.stack_length(new_board_location)
+        length_old_stack = self.stack_length(old_location)
+        length_new_stack = self.stack_length(new_location)
 
-        # for piece in old_board_location:
-        #     new_board_location.append(piece)
-        #
-        # # pops off the last item on a list
-        # for index_pop in range(0, length_old_stack):
-        #     old_board_location.pop()
-        #
-        # if (length_old_stack + length_new_stack) > 5:
-        #     self.check_stack(player_piece, new_board_location)
-        #
-        # #
-        # ##REMOVE LATER
-        # print(self._board)
-        # ##REMOVE LATER
-        # #
+        for piece in old_board_location:
+            new_board_location.append(piece)
 
-    def check_stack(self, player_piece, location):
+        # pops off the last item on a list
+        for index_pop in range(0, length_old_stack):
+            old_board_location.pop()
+
+        if (length_old_stack + length_new_stack) > 5:
+            self.get_reserve(new_board_location)
+
+        #
+        ##REMOVE LATER
+        print(self._board)
+        ##REMOVE LATER
+        #
+
+    def get_reserve(self, location):
         """
         Grabs the stack that player had made a move to and check whether or not the stack
         is more than 5. if piece at the bottom of the stack
@@ -249,12 +245,43 @@ class FocusGame:
 
         while stack_length > 5:
             bottom_of_stack = stack[0]
-            print('iamhere')
+
+            player_piece = self.get_player_piece
+
+            if bottom_of_stack == player_piece:
+                self.set_reserve()
+            else:
+                self.set_captured()
+
+            stack.pop(0)
+
+    def set_captured(self):
+        """updates the number of captured pieces by a player"""
+
+        current_player_turn = self._player_turn()
+
+        if current_player_turn == self._player_A[0]:
+            self._captured_pieces_A += 1
+        else:
+            self._captured_pieces_B += 1
+
+    def set_reserve(self):
+        """updates the number of reserve pieces by a player"""
+
+        current_player_turn = self._player_turn()
+
+        if current_player_turn == self._player_A[0]:
+            self._reserve_pieces_B += 1
+        else:
+            self._reserve_pieces_B += 1
+
+
+
 
 game = FocusGame(('Unicorn', 'R'), ('PlayerB', 'G'))
 print(game.move_piece('Unicorn', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
-#print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
-#print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "successfully moved"
-#print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
-#print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
-print(game.show_pieces((0,3))) #Returns ['R'])
+print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
+print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "successfully moved"
+print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
+print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
+print(game.show_pieces((0,1))) #Returns ['R'])
