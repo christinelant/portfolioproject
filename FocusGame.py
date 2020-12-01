@@ -275,6 +275,24 @@ class FocusGame:
         else:
             self._reserve_pieces_B += 1
 
+    #def get_player_from_piece(self):
+
+    def show_captured(self, player):
+        """show current amount of pieces captured by player"""
+
+        if player == self._player_A[0]:
+            return self._captured_pieces_A
+        else:
+            return self._caputured_pieces_B
+
+    def show_reserve(self, player):
+        """show current amount of pieces captured by player"""
+
+        if player == self._player_A[0]:
+            return self._reserve_pieces_A
+        else:
+            return self._reserve_pieces_B
+
 
 
 
@@ -285,3 +303,5 @@ print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "success
 print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
 print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
 print(game.show_pieces((0,1))) #Returns ['R'])
+print(game.show_reserve('Unicorn'))
+print(game.show_reserve('PlayerB'))
