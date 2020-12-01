@@ -131,9 +131,7 @@ class FocusGame:
 
         top_piece = stack[length_of_stack - 1]
 
-        stack_to_string = ''.join(top_piece)
-
-        return stack_to_string
+        return top_piece
 
 
     def stack_length(self, location):
@@ -220,10 +218,12 @@ class FocusGame:
 
         for piece in old_board_location:
             new_board_location.append(piece)
+            old_board_location.pop()
 
         # pops off the last item on a list
-        for index_pop in range(0, length_old_stack):
-            old_board_location.pop()
+        # for index_pop in range(0, length_old_stack - 1):
+        #     print(index_pop)
+        #     old_board_location.pop(index_pop)
 
         if (length_old_stack + length_new_stack) > 5:
             self.get_reserve(new_board_location)
@@ -302,6 +302,16 @@ print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
 print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "successfully moved"
 print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
 print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
+print(game.move_piece('PlayerB', (1, 1), (3, 1), 2))
+print(game.show_pieces((1,2))) #Returns ['R'])
+# print(game.show_pieces((1,3))) #Returns ['R'])
+print(game.move_piece('Unicorn', (1, 2), (0, 2), 1))
+print(game.move_piece('PlayerB', (5, 5), (5, 4), 1))
+print(game.move_piece('Unicorn', (0, 5), (0, 4), 1))
+print(game.move_piece('PlayerB', (5, 1), (5, 0), 1))
+print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
+print(game.move_piece('PlayerB', (4, 2), (4, 3), 1))
+print(game.move_piece('Unicorn', (0, 2), (0, 3), 1)) #stack is 5
 print(game.show_pieces((0,1))) #Returns ['R'])
 print(game.show_reserve('Unicorn'))
 print(game.show_reserve('PlayerB'))
