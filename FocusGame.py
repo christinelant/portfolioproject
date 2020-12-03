@@ -8,14 +8,14 @@ class FocusGame:
     their opponents pieces or make it so their opponent can no longer move
     """
 
-    def __init__(self, tuple_1, tuple_2):
+    def __init__(self, player_info_1, player_info_2):
         """
         initializes game board with the player and the player's color
         and starting position for game pieces
         board is set to None
         """
-        self._player_A = tuple_1
-        self._player_B = tuple_2
+        self._player_A = player_info_1
+        self._player_B = player_info_2
         self._player_turn = None
 
         self._captured_pieces_A = 0
@@ -24,14 +24,14 @@ class FocusGame:
         self._reserve_pieces_A = 0
         self._reserve_pieces_B = 0
 
-        # hard coded for now -- have to change this later to populate in colors
         self._board = self._populate_board()
         for row in self._board:
             print(row)
+        print("")
 
     def _populate_board(self):
         """
-        Fills FocusGame board with player pieces to set up the game
+        Fills FocusGame board with specified player pieces
         """
         board = []
 
@@ -77,12 +77,10 @@ class FocusGame:
         if player != current_player_turn:
             return False
 
-        ## VALIDATE MOVE
         # grab player piece at the top of stack to see if move from starting location is valid
         player_piece = self.get_player_piece()
 
         # grab the top stack piece at current location to see if it matches player piece
-        # (allows movement)
         top_of_stack = self.top_piece(current_location)
 
         # stack is empty
@@ -93,14 +91,12 @@ class FocusGame:
             return False
 
         # check new location to see if current location - new location = spaces to move
-        check_for_move = self.check_new_position(new_location, current_location, pieces_to_move)
+        check_for_move = self.check_move_valid(new_location, current_location, pieces_to_move)
 
         if check_for_move is False:
             return False
 
-        ## END VALIDATE MOVE
-
-        # make move
+        # moves the piece, after validation above is complete
         self.update_stack(new_location, current_location, player_piece, pieces_to_move)
 
         # check for win
@@ -109,7 +105,7 @@ class FocusGame:
         if win:
             return player.upper() + " WINS"
 
-        # switch turn to other player if move is made successfully
+        # switch turn to other player after successful move and no win
         self.change_player()
 
         return 'successfully moved'
@@ -168,7 +164,7 @@ class FocusGame:
 
         return len(stack)
 
-    def check_new_position(self, new_position, current_position, pieces_to_move):
+    def check_move_valid(self, move_piece_from, move_piece_to, pieces_to_move):
         """
         validates getting to the new position, from the current position
         (horizontally/vertically) using spaces to move
@@ -176,7 +172,7 @@ class FocusGame:
 
         ##MAY NOT NEED
         # check if stack length at old/current location is equal or less than spaces to move
-        stack_check = self.validate_move(current_position, pieces_to_move)
+        stack_check = self.validate_move(move_piece_to, pieces_to_move)
 
         # spaces to move invalid
         if stack_check is False:
@@ -184,16 +180,21 @@ class FocusGame:
         ##MAY NOT NEED
 
         # grab the row and column of new and current position
-        row_1 = new_position[0]
-        row_2 = current_position[0]
+        row_1 = move_piece_from[0]
+        row_2 = move_piece_to[0]
 
-        column_1 = new_position[1]
-        column_2 = current_position[1]
+        column_1 = move_piece_from[1]
+        column_2 = move_piece_to[1]
 
         # get the subtraction of the two (can only move horizontal or vertically)
         horizontal = row_1 - row_2
         vertical = column_1 - column_2
 
+        # cannot move diagonally, if both X and Y change, move is diagonal
+        if abs(horizontal) and abs(vertical) > 0:
+            return False
+
+        # horizontal or vertical move has to be less than or equal to amount of pieces to move
         if abs(horizontal) <= pieces_to_move or abs(vertical) <= pieces_to_move:
             return True
 
@@ -252,7 +253,9 @@ class FocusGame:
 
         #
         ##REMOVE LATER
-        print(self._board)
+        for row in self._board:
+            print(row)
+        print("")
         ##REMOVE LATER
         #
 
@@ -265,33 +268,31 @@ class FocusGame:
 
         stack = self.show_pieces(location)
         stack_length = self.stack_length(location)
+        current_turn = self.get_current_player()
 
         while stack_length > 5:
             bottom_of_stack = stack[0]
-            print(bottom_of_stack)
-            print(player_piece)
 
             if bottom_of_stack == player_piece:
-                self.set_reserve(bottom_of_stack)
+                self.set_reserve(current_turn)
             else:
-                self.set_captured(bottom_of_stack)
+                self.set_captured(current_turn)
 
             stack.pop(0)
 
             stack_length -= 1
 
-    def set_captured(self, bottom_of_stack):
+    def set_captured(self, current_player_turn):
         """updates the number of captured pieces by a player"""
-
-        if bottom_of_stack == self._player_A[1]:
+        if current_player_turn == self._player_A[0]:
             self._captured_pieces_B += 1
         else:
             self._captured_pieces_A += 1
 
-    def set_reserve(self, bottom_of_stack):
+    def set_reserve(self, current_player_turn):
         """updates the number of reserve pieces by a player"""
 
-        if bottom_of_stack == self._player_A[1]:
+        if current_player_turn == self._player_A[0]:
             self._reserve_pieces_A += 1
         else:
             self._reserve_pieces_B += 1
@@ -299,18 +300,31 @@ class FocusGame:
     def show_captured(self, player):
         """show current amount of pieces captured by player"""
 
+        if self.check_if_player(player) is False:
+            return 'Player Not Found'
+
         if player == self._player_A[0]:
-            return self._captured_pieces_A
-        else:
             return self._captured_pieces_B
+        else:
+            return self._captured_pieces_A
 
     def show_reserve(self, player):
         """show current amount of pieces captured by player"""
+
+        #player doesn't exist
+        if self.check_if_player(player) is False:
+            return 'Player Not Found'
 
         if player == self._player_A[0]:
             return self._reserve_pieces_A
         else:
             return self._reserve_pieces_B
+
+    def check_if_player(self, player):
+        """checks if player exists within game"""
+
+        if player != self._player_A[0] and player != self._player_B[0]:
+            return False
 
     def get_current_player(self):
         """returns the current turn's player"""
@@ -321,35 +335,42 @@ class FocusGame:
         checks to see if player captured 6 pieces belonging to opponent
         """
 
+        # checks if player matches init method player A
         if player == self._player_A[0]:
             total_captured = self._captured_pieces_A
         else:
             total_captured = self._captured_pieces_B
 
-        if total_captured == 1:
+        if total_captured == 2:
             return True
 
         return False
 
-game = FocusGame(('Unicorn', 'S'), ('PlayerB', 'C'))
-# print(game.move_piece('Unicorn', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
-# print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
-# print(game.move_piece('Unicorn', (0, 1), (0, 0), 1))  # Returns message "successfully moved"
-# print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
-# print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
-# print(game.move_piece('PlayerB', (1, 1), (3, 1), 2))
+game = FocusGame(('Synclair', 'S'), ('Christine', 'C'))
+print(game.move_piece('Synclair', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
+print(game.move_piece('Christine', (0, 2), (0, 3), 1))
+print(game.move_piece('Synclair', (0, 1), (0, 0), 1))  # Returns message "successfully moved"
+print(game.move_piece('Christine', (1, 0), (1, 1), 1))
+print(game.move_piece('Synclair', (0, 4), (0, 3), 1))
+print(game.move_piece('Christine', (1, 1), (3, 1), 2))
 # print(game.show_pieces((1, 2)))  # Returns ['R'])
-# # print(game.show_pieces((1,3))) #Returns ['R'])
-# print(game.move_piece('Unicorn', (1, 2), (0, 2), 1))
-# print(game.move_piece('PlayerB', (5, 5), (5, 4), 1))
-# print(game.move_piece('Unicorn', (0, 5), (0, 4), 1))
-# print(game.move_piece('PlayerB', (5, 1), (5, 0), 1))
-# print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
-# print(game.move_piece('PlayerB', (4, 2), (4, 3), 1))
-# print(game.move_piece('Unicorn', (0, 2), (0, 3), 1))  # stack is 5 bottom of stack is G
-# print(game.move_piece('PlayerB', (1, 4), (1, 3), 1))
-# print(game.move_piece('Unicorn', (0, 2), (0, 3), 1))
+# print(game.show_pieces((1,3))) #Returns ['R'])
+print(game.move_piece('Synclair', (1, 2), (0, 2), 1))
+print(game.move_piece('Christine', (5, 5), (5, 4), 1))
+print(game.move_piece('Synclair', (0, 5), (0, 4), 1))
+print(game.move_piece('Christine', (5, 1), (5, 0), 1))
+print(game.move_piece('Synclair', (0, 4), (0, 3), 1))
+print(game.move_piece('Christine', (4, 2), (4, 3), 1))
+print(game.move_piece('Synclair', (0, 2), (0, 3), 1))  # stack is 5 bottom of stack is G
+print(game.move_piece('Christine', (1, 4), (0, 4), 1))
+print(game.move_piece('Synclair', (0, 0), (0, 1), 1))
+print(game.move_piece('Christine', (0, 4), (0, 3), 1)) # 'C' is reserve
+print(game.move_piece('Synclair', (1, 3), (0, 3), 1)) # 'C' is captured
+print(game.move_piece('Christine', (5, 4), (3, 4), 2))
+print(game.move_piece('Synclair', (2, 1), (3, 1), 1))
+print(game.move_piece('Christine', (3, 5), (3, 4), 1))
 # # # print(game.show_pieces((0,1))) #Returns ['R'])
-# print(game.show_reserve('Unicorn'))
-# print(game.show_reserve('PlayerB'))
-# print(game.show_captured('Unicorn'))
+print('Synclair reserve is: ', game.show_reserve('Synclair'))
+print('Christine reserve is: ', game.show_reserve('Christine'))
+print('Christine captured is: ',game.show_captured('Christine'))
+print('Synclair captured is: ', game.show_captured('Synclair'))
