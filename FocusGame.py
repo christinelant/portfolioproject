@@ -24,19 +24,45 @@ class FocusGame:
         self._reserve_pieces_A = 0
         self._reserve_pieces_B = 0
 
-        # self._board = [[None for i in range(self._board_size)] for i in range(self._board_size)]
-
         # hard coded for now -- have to change this later to populate in colors
-        self._board = [
-            [['R'], ['R'], ['G'], ['G'], ['R'], ['R']],
-            [['G'], ['G'], ['R'], ['R'], ['G'], ['G']],
-            [['R'], ['R'], ['G'], ['G'], ['R'], ['R']],
-            [['G'], ['G'], ['R'], ['R'], ['G'], ['G']],
-            [['R'], ['R'], ['G'], ['G'], ['R'], ['R']],
-            [['G'], ['G'], ['R'], ['R'], ['G'], ['G']],
-        ]
+        self._board = self._populate_board()
+        for row in self._board:
+            print(row)
 
-    def move_piece(self, player, current_location, new_location, spaces_to_move):
+    def _populate_board(self):
+        """
+        Fills FocusGame board with player pieces to set up the game
+        """
+        board = []
+
+        players = [self._player_A[1], self._player_B[1]]
+
+        for row in range(0, 6):
+            row_contents = []
+            play_amount = 0
+            if row == 1 or row == 3 or row == 5:
+                selected_player = players[1]
+            else:
+                selected_player = players[0]
+
+            for col in range(0, 6):
+                if play_amount == 2:
+                    if selected_player == players[1]:
+                        selected_player = players[0]
+
+                    elif selected_player == players[0]:
+                        selected_player = players[1]
+
+                    play_amount = 0
+
+                play_amount += 1
+                row_contents.append([selected_player])
+
+            board.append(row_contents)
+
+        return board
+
+    def move_piece(self, player, current_location, new_location, pieces_to_move):
         """
         moves specified player's piece if move is possible
         otherwise, returns an error based on any of the following:
@@ -67,7 +93,7 @@ class FocusGame:
             return False
 
         # check new location to see if current location - new location = spaces to move
-        check_for_move = self.check_new_position(new_location, current_location, spaces_to_move)
+        check_for_move = self.check_new_position(new_location, current_location, pieces_to_move)
 
         if check_for_move is False:
             return False
@@ -75,7 +101,7 @@ class FocusGame:
         ## END VALIDATE MOVE
 
         # make move
-        self.update_stack(new_location, current_location, player_piece, spaces_to_move)
+        self.update_stack(new_location, current_location, player_piece, pieces_to_move)
 
         # check for win
         win = self.check_for_win(player)
@@ -142,15 +168,15 @@ class FocusGame:
 
         return len(stack)
 
-    def check_new_position(self, new_position, current_position, spaces_to_move):
+    def check_new_position(self, new_position, current_position, pieces_to_move):
         """
         validates getting to the new position, from the current position
         (horizontally/vertically) using spaces to move
         """
 
         ##MAY NOT NEED
-        # check if stack at current location is
-        stack_check = self.validate_move(current_position, spaces_to_move)
+        # check if stack length at old/current location is equal or less than spaces to move
+        stack_check = self.validate_move(current_position, pieces_to_move)
 
         # spaces to move invalid
         if stack_check is False:
@@ -168,12 +194,12 @@ class FocusGame:
         horizontal = row_1 - row_2
         vertical = column_1 - column_2
 
-        if abs(horizontal) == spaces_to_move or abs(vertical) == spaces_to_move:
+        if abs(horizontal) <= pieces_to_move or abs(vertical) <= pieces_to_move:
             return True
 
         return False
 
-    def validate_move(self, stack_location, spaces_to_move):
+    def validate_move(self, stack_location, pieces_to_move):
         """
         checks to see if stack at current position is equal to the amount of spaces
         to move
@@ -183,10 +209,10 @@ class FocusGame:
         length = self.stack_length(stack_location)
 
         # checks to see if the spaces to move is equal to stack length
-        if length != spaces_to_move:
-            return False
+        if pieces_to_move <= length:
+            return True
 
-        return True
+        return False
 
     def show_pieces(self, location):
         """shows pieces stacked at specified location"""
@@ -200,7 +226,7 @@ class FocusGame:
 
         return stack
 
-    def update_stack(self, new_location, old_location, player_piece, total_elements):
+    def update_stack(self, new_location, old_location, player_piece, pieces_to_move):
         """
         Updates new and old location stacks by adding or removing a
         piece(s), respectively. Piece(s) to be moved are determined by the total
@@ -216,9 +242,10 @@ class FocusGame:
         length_old_stack = self.stack_length(old_location)
         length_new_stack = self.stack_length(new_location)
 
-        for piece in old_board_location:
-            new_board_location.append(piece)
-            old_board_location.pop()
+        for piece in range(0, pieces_to_move):
+            piece_to_move = old_board_location.pop()
+            new_board_location.append(piece_to_move)
+
 
         if (length_old_stack + length_new_stack) > 5:
             self.set_reserve_capture(new_location, player_piece)
@@ -304,23 +331,25 @@ class FocusGame:
 
         return False
 
-game = FocusGame(('Unicorn', 'R'), ('PlayerB', 'G'))
-print(game.move_piece('Unicorn', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
-print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
-print(game.move_piece('Unicorn', (0, 1), (0, 3), 2))  # Returns message "successfully moved"
-print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
-print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
-print(game.move_piece('PlayerB', (1, 1), (3, 1), 2))
+game = FocusGame(('Unicorn', 'S'), ('PlayerB', 'C'))
+# print(game.move_piece('Unicorn', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
+# print(game.move_piece('PlayerB', (0, 2), (0, 3), 1))
+# print(game.move_piece('Unicorn', (0, 1), (0, 0), 1))  # Returns message "successfully moved"
+# print(game.move_piece('PlayerB', (1, 0), (1, 1), 1))
+# print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
+# print(game.move_piece('PlayerB', (1, 1), (3, 1), 2))
 # print(game.show_pieces((1, 2)))  # Returns ['R'])
-# print(game.show_pieces((1,3))) #Returns ['R'])
-print(game.move_piece('Unicorn', (1, 2), (0, 2), 1))
-print(game.move_piece('PlayerB', (5, 5), (5, 4), 1))
-print(game.move_piece('Unicorn', (0, 5), (0, 4), 1))
-print(game.move_piece('PlayerB', (5, 1), (5, 0), 1))
-print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
-print(game.move_piece('PlayerB', (4, 2), (4, 3), 1))
-print(game.move_piece('Unicorn', (0, 2), (0, 3), 1))  # stack is 5 bottom of stack is G
-# print(game.show_pieces((0,1))) #Returns ['R'])
-print(game.show_reserve('Unicorn'))
-print(game.show_reserve('PlayerB'))
-print(game.show_captured('Unicorn'))
+# # print(game.show_pieces((1,3))) #Returns ['R'])
+# print(game.move_piece('Unicorn', (1, 2), (0, 2), 1))
+# print(game.move_piece('PlayerB', (5, 5), (5, 4), 1))
+# print(game.move_piece('Unicorn', (0, 5), (0, 4), 1))
+# print(game.move_piece('PlayerB', (5, 1), (5, 0), 1))
+# print(game.move_piece('Unicorn', (0, 4), (0, 3), 1))
+# print(game.move_piece('PlayerB', (4, 2), (4, 3), 1))
+# print(game.move_piece('Unicorn', (0, 2), (0, 3), 1))  # stack is 5 bottom of stack is G
+# print(game.move_piece('PlayerB', (1, 4), (1, 3), 1))
+# print(game.move_piece('Unicorn', (0, 2), (0, 3), 1))
+# # # print(game.show_pieces((0,1))) #Returns ['R'])
+# print(game.show_reserve('Unicorn'))
+# print(game.show_reserve('PlayerB'))
+# print(game.show_captured('Unicorn'))
