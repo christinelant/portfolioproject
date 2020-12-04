@@ -38,6 +38,8 @@ class FocusGame:
 
         self._board = self._populate_board()
 
+        self._game_status = "UNFINISHED"
+
     def _populate_board(self):
         """
         Populates FocusGame board with specified player pieces, as the game is case insensitive.
@@ -84,6 +86,10 @@ class FocusGame:
         player turn is alternated to other player.
         """
 
+        # game is finished
+        if self.get_game_status == "FINISHED":
+            return False
+
         # check if it is the turn of the player attempting to go
         if self.check_player_turn(player) is False:
             return False
@@ -111,6 +117,7 @@ class FocusGame:
 
         # check for win
         if self.check_for_win(player):
+            self._game_status = "FINISHED"
             return player.upper() + " WINS"
 
         # switch turn to other player after successful move and no win
@@ -418,6 +425,12 @@ class FocusGame:
         # change current turn to next player
         self.change_turn()
 
+        # #
+        # for row in self._board:
+        #     print(row)
+        # print("")
+        # #
+
         return 'reserve move successful'
 
     def decrease_reserve(self, current_player_turn):
@@ -430,6 +443,13 @@ class FocusGame:
             self._reserve_pieces_A -= 1
         else:
             self._reserve_pieces_B -= 1
+
+    def get_game_status(self):
+        """
+        Returns current game status
+        "UNFINISHED" or "FINISHED"
+        """
+        return self._game_status
 
 game = FocusGame(('Synclair', 'S'), ('Christine', 'C'))
 print(game.move_piece('Synclair', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
