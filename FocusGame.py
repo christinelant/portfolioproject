@@ -58,7 +58,7 @@ class FocusGame:
             else:
                 selected_player = players[0]
 
-            for col in range(0, 6):
+            for column in range(0, 6):
                 if play_amount == 2:
 
                     # alternates between player pieces after piece is appended twice
@@ -391,7 +391,7 @@ class FocusGame:
             total_captured = self._captured_pieces_B
 
         # win condition is 6 pieces
-        if total_captured == 1:
+        if total_captured == 6:
             return True
 
         return False
