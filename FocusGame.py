@@ -304,9 +304,9 @@ class FocusGame:
         """
 
         if current_player_turn == self._player_A[0]:
-            self._captured_pieces_A += 1
-        else:
             self._captured_pieces_B += 1
+        else:
+            self._captured_pieces_A += 1
 
     def set_reserve(self, current_player_turn):
         """
