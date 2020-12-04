@@ -208,7 +208,7 @@ class FocusGame:
             return False
 
         # horizontal or vertical move has to be less than or equal to amount of pieces to move
-        if abs(horizontal) <= pieces_to_move or abs(vertical) <= pieces_to_move:
+        elif abs(horizontal) <= pieces_to_move or abs(vertical) <= pieces_to_move:
             return True
 
         return False
