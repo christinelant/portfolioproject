@@ -383,12 +383,14 @@ class FocusGame:
         """
         Checks to see if specified player captured 6 pieces belonging to opponent.
         """
+        print(player)
+        print(self._player_A[0])
 
         # [player name] == [name of player A]
         if player == self._player_A[0]:
-            total_captured = self._captured_pieces_A
-        else:
             total_captured = self._captured_pieces_B
+        else:
+            total_captured = self._captured_pieces_A
 
         # win condition is 6 pieces
         if total_captured == 6:
@@ -481,21 +483,25 @@ class FocusGame:
 # # print(game.move_piece('Christine', (3, 5), (3, 4), 1))
 # print(game.reserved_move('Christine', (0,3)))
 # print(game.move_piece('Synclair', (0, 1), (0, 3), 2))
-# # print(game.move_piece('Christine', (3, 5), (3, 4), 1))
-# # print(game.move_piece('Synclair', (3, 2), (3, 1), 1))
-# # print(game.move_piece('Christine', (3, 0), (3, 1), 1))
-# # print(game.move_piece('Synclair', (3, 3), (3, 2), 1))
-# # print(game.move_piece('Christine', (3, 1), (3, 4), 3))
-# # print(game.move_piece('Synclair', (1, 5), (0, 5), 1))
-# # print(game.move_piece('Christine', (3, 1), (3, 4), 3))
+# print(game.move_piece('Christine', (3, 5), (3, 4), 1))
+# print(game.move_piece('Synclair', (3, 2), (3, 1), 1))
+# print(game.move_piece('Christine', (3, 0), (3, 1), 1))
+# print(game.move_piece('Synclair', (3, 3), (3, 2), 1))
+# print(game.move_piece('Christine', (3, 1), (3, 4), 3))
+# print(game.move_piece('Synclair', (2, 5), (1, 5), 1))
+# print(game.move_piece('Christine', (3, 1), (3, 3), 2))
+# print(game.move_piece('Synclair', (3, 2), (3, 3), 1))
+# print(game.move_piece('Christine', (4, 3), (4, 5), 2))
+# print(game.move_piece('Synclair', (3, 3), (3, 4), 1))
+# print(game.move_piece('Christine', (5, 0), (5, 1), 1))
 # # # # print(game.show_pieces((0,1))) #Returns ['R'])
 # print('Synclair reserve is: ', game.show_reserve('Synclair'))
 # print('Christine reserve is: ', game.show_reserve('Christine'))
 # print('Christine captured is: ',game.show_captured('Christine'))
 # print('Synclair captured is: ', game.show_captured('Synclair'))
-#
-# # #
-# # for row in self._board:
-# #     print(row)
-# # print("")
-# # #
+# #
+# # # #
+# # # for row in self._board:
+# # #     print(row)
+# # # print("")
+# # # #
