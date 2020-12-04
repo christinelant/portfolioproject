@@ -123,6 +123,12 @@ class FocusGame:
         # switch turn to other player after successful move and no win
         self.change_turn()
 
+        # #
+        # for row in self._board:
+        #     print(row)
+        # print("")
+        # #
+
         return 'successfully moved'
 
     def set_current_player(self, player):
@@ -298,9 +304,9 @@ class FocusGame:
         """
 
         if current_player_turn == self._player_A[0]:
-            self._captured_pieces_B += 1
-        else:
             self._captured_pieces_A += 1
+        else:
+            self._captured_pieces_B += 1
 
     def set_reserve(self, current_player_turn):
         """
@@ -385,7 +391,7 @@ class FocusGame:
             total_captured = self._captured_pieces_B
 
         # win condition is 6 pieces
-        if total_captured == 6:
+        if total_captured == 1:
             return True
 
         return False
@@ -486,7 +492,7 @@ class FocusGame:
 # print('Synclair reserve is: ', game.show_reserve('Synclair'))
 # print('Christine reserve is: ', game.show_reserve('Christine'))
 # print('Christine captured is: ',game.show_captured('Christine'))
-# # print('Synclair captured is: ', game.show_captured('Synclair'))
+# print('Synclair captured is: ', game.show_captured('Synclair'))
 #
 # # #
 # # for row in self._board:
