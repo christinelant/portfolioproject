@@ -208,14 +208,14 @@ class FocusGame:
             return False
 
         # horizontal or vertical move has to be less than or equal to amount of pieces to move
-        elif abs(horizontal) <= pieces_to_move or abs(vertical) <= pieces_to_move:
-            return True
+        if abs(horizontal) > pieces_to_move or abs(vertical) > pieces_to_move:
+            return False
 
-        return False
+        return True
 
     def validate_move(self, stack_location, pieces_to_move):
         """
-        Checks to see if stack at current position is equal to the amount of pieces to move.
+        Checks to see if stack at current position is less than or equal to the amount of pieces to move.
         """
 
         # grabs the length of stack
@@ -385,7 +385,7 @@ class FocusGame:
             total_captured = self._captured_pieces_A
 
         # win condition is 6 pieces
-        if total_captured == 6:
+        if total_captured >= 6:
             return True
 
         return False
@@ -402,7 +402,7 @@ class FocusGame:
 
         # returns an error if player has no reserve
         if player_reserve == 0:
-            return "No pieces in reserve"
+            return False
 
         # returns an error if not player turn
         if self.check_player_turn(player) is False:
