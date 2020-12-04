@@ -383,8 +383,6 @@ class FocusGame:
         """
         Checks to see if specified player captured 6 pieces belonging to opponent.
         """
-        print(player)
-        print(self._player_A[0])
 
         # [player name] == [name of player A]
         if player == self._player_A[0]:
