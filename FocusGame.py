@@ -451,45 +451,45 @@ class FocusGame:
         """
         return self._game_status
 
-game = FocusGame(('Synclair', 'S'), ('Christine', 'C'))
-print(game.move_piece('Synclair', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
-print(game.move_piece('Christine', (0, 2), (0, 3), 1))
-print(game.move_piece('Synclair', (0, 1), (0, 0), 1))  # Returns message "successfully moved"
-print(game.move_piece('Christine', (1, 0), (1, 1), 1))
-print(game.move_piece('Synclair', (0, 4), (0, 3), 1))
-print(game.move_piece('Christine', (1, 1), (3, 1), 2))
-# print(game.show_pieces((1, 2)))  # Returns ['R'])
-print(game.move_piece('Synclair', (1, 2), (0, 2), 1))
-print(game.move_piece('Christine', (5, 5), (5, 4), 1))
-print(game.move_piece('Synclair', (0, 5), (0, 4), 1))
-print(game.move_piece('Christine', (5, 1), (5, 0), 1))
-print(game.move_piece('Synclair', (0, 4), (0, 3), 1))
-print(game.move_piece('Christine', (4, 2), (4, 3), 1))
-print(game.move_piece('Synclair', (0, 2), (0, 3), 1))  # stack is 5 bottom of stack is G
-print(game.move_piece('Christine', (1, 4), (0, 4), 1))
-print(game.move_piece('Synclair', (0, 0), (0, 1), 1))
-print(game.move_piece('Christine', (0, 4), (0, 3), 1)) # 'C' is reserve
-print(game.move_piece('Synclair', (1, 3), (0, 3), 1)) # 'C' is captured
-print(game.move_piece('Christine', (5, 4), (3, 4), 2))
-print(game.move_piece('Synclair', (2, 1), (3, 1), 1))
-# print(game.move_piece('Christine', (3, 5), (3, 4), 1))
-print(game.reserved_move('Christine', (0,3)))
-print(game.move_piece('Synclair', (0, 1), (0, 3), 2))
-# print(game.move_piece('Christine', (3, 5), (3, 4), 1))
-# print(game.move_piece('Synclair', (3, 2), (3, 1), 1))
-# print(game.move_piece('Christine', (3, 0), (3, 1), 1))
-# print(game.move_piece('Synclair', (3, 3), (3, 2), 1))
-# print(game.move_piece('Christine', (3, 1), (3, 4), 3))
-# print(game.move_piece('Synclair', (1, 5), (0, 5), 1))
-# print(game.move_piece('Christine', (3, 1), (3, 4), 3))
-# # # print(game.show_pieces((0,1))) #Returns ['R'])
-print('Synclair reserve is: ', game.show_reserve('Synclair'))
-print('Christine reserve is: ', game.show_reserve('Christine'))
-print('Christine captured is: ',game.show_captured('Christine'))
-# print('Synclair captured is: ', game.show_captured('Synclair'))
-
-# #
-# for row in self._board:
-#     print(row)
-# print("")
-# #
+# game = FocusGame(('Synclair', 'S'), ('Christine', 'C'))
+# print(game.move_piece('Synclair', (0, 0), (0, 1), 1))  # Returns message "successfully moved"
+# print(game.move_piece('Christine', (0, 2), (0, 3), 1))
+# print(game.move_piece('Synclair', (0, 1), (0, 0), 1))  # Returns message "successfully moved"
+# print(game.move_piece('Christine', (1, 0), (1, 1), 1))
+# print(game.move_piece('Synclair', (0, 4), (0, 3), 1))
+# print(game.move_piece('Christine', (1, 1), (3, 1), 2))
+# # print(game.show_pieces((1, 2)))  # Returns ['R'])
+# print(game.move_piece('Synclair', (1, 2), (0, 2), 1))
+# print(game.move_piece('Christine', (5, 5), (5, 4), 1))
+# print(game.move_piece('Synclair', (0, 5), (0, 4), 1))
+# print(game.move_piece('Christine', (5, 1), (5, 0), 1))
+# print(game.move_piece('Synclair', (0, 4), (0, 3), 1))
+# print(game.move_piece('Christine', (4, 2), (4, 3), 1))
+# print(game.move_piece('Synclair', (0, 2), (0, 3), 1))  # stack is 5 bottom of stack is G
+# print(game.move_piece('Christine', (1, 4), (0, 4), 1))
+# print(game.move_piece('Synclair', (0, 0), (0, 1), 1))
+# print(game.move_piece('Christine', (0, 4), (0, 3), 1)) # 'C' is reserve
+# print(game.move_piece('Synclair', (1, 3), (0, 3), 1)) # 'C' is captured
+# print(game.move_piece('Christine', (5, 4), (3, 4), 2))
+# print(game.move_piece('Synclair', (2, 1), (3, 1), 1))
+# # print(game.move_piece('Christine', (3, 5), (3, 4), 1))
+# print(game.reserved_move('Christine', (0,3)))
+# print(game.move_piece('Synclair', (0, 1), (0, 3), 2))
+# # print(game.move_piece('Christine', (3, 5), (3, 4), 1))
+# # print(game.move_piece('Synclair', (3, 2), (3, 1), 1))
+# # print(game.move_piece('Christine', (3, 0), (3, 1), 1))
+# # print(game.move_piece('Synclair', (3, 3), (3, 2), 1))
+# # print(game.move_piece('Christine', (3, 1), (3, 4), 3))
+# # print(game.move_piece('Synclair', (1, 5), (0, 5), 1))
+# # print(game.move_piece('Christine', (3, 1), (3, 4), 3))
+# # # # print(game.show_pieces((0,1))) #Returns ['R'])
+# print('Synclair reserve is: ', game.show_reserve('Synclair'))
+# print('Christine reserve is: ', game.show_reserve('Christine'))
+# print('Christine captured is: ',game.show_captured('Christine'))
+# # print('Synclair captured is: ', game.show_captured('Synclair'))
+#
+# # #
+# # for row in self._board:
+# #     print(row)
+# # print("")
+# # #
